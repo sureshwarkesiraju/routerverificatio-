@@ -36,9 +36,9 @@ gen_pkt.kind=STIMULUS;
 gen_pkt.copy(ref_pkt);
 //Section G.4.2: Place normal stimulus packet in mailbox
 mbx.put(gen_pkt);
-  $display("[Generator] Packet %0d (size=%0d) Generated at time=%0t",pkt_id,gen_pkt.len,$time); 
+  $display("[Generator] Packet %0d (size=%0d) Generated at time=%0t",pkt_id,gen_pkt.len,$time);
 end
-   
+
 endtask
 
 endclass
