@@ -1,0 +1,55 @@
+# ** Warning: (vlib-34) Library already exists at "work".
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:32:50 on Jun 13,2025
+# vlog -sv router_dut.sv 
+# -- Compiling module router_dut
+# 
+# Top level modules:
+# 	router_dut
+# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 17:32:50 on Jun 13,2025
+# vlog -sv testbench.sv 
+# -- Compiling module testbench
+# 
+# Top level modules:
+# 	testbench
+# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -voptargs="+acc" testbench 
+# Start time: 17:32:50 on Jun 13,2025
+# Loading sv_std.std
+# Loading work.testbench
+# Loading work.router_dut
+# [TB reset] Applied reset to DUT
+# [TB Reset] Reset completed
+# [TB Generate] packet (size=28) at time =15
+# [TB Drive] Driving of packet started at time=25
+# [TB Generate] packet (size=30) at time =355
+# [TB Drive] Driving of packet started at time=615
+# [TB Generate] packet (size=27) at time =965
+# [TB Drive] Driving of packet started at time=1245
+# [TB Generate] packet (size=24) at time =1565
+# [TB Drive] Driving of packet started at time=1815
+# [TB Generate] packet (size=24) at time =2105
+# [TB Drive] Driving of packet started at time=2325
+# [TB Generate] packet (size=28) at time =2615
+# [TB Drive] Driving of packet started at time=2835
+# [TB Generate] packet (size=27) at time =3165
+# [TB Drive] Driving of packet started at time=3425
+# [TB Generate] packet (size=24) at time =3745
+# [TB Drive] Driving of packet started at time=3995
+# [TB Generate] packet (size=20) at time =4285
+# [TB Drive] Driving of packet started at time=4505
+# [TB Generate] packet (size=23) at time =4755
+# [TB Drive] Driving of packet started at time=4935
+# **********************************************************
+# ********************** TEST PASSESD **********************
+# ************** [INFO] All pakckets matched ***************
+# ************** [INFO] matched =10 mismatched =0 **********
+# **********************************************************
+# ** Note: $finish    : testbench.sv(173)
+#    Time: 5515 ps  Iteration: 1  Instance: /testbench
+# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0

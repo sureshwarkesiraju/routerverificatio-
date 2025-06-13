@@ -130,7 +130,8 @@ module testbench;
 
     if (mis_matched == 0 && matched == count) begin
       $display("**********************************************************");
-      $display("************** [INFO] all pakckets matched ***************");
+      $display("********************** TEST PASSESD **********************");
+      $display("************** [INFO] All pakckets matched ***************");
       $display("************** [INFO] matched =%0d mismatched =%0d **********", matched,
                mis_matched);
       $display("**********************************************************");
