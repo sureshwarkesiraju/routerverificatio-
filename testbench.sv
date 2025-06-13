@@ -112,11 +112,11 @@ module testbench;
     bit [31:0] mis_matched;
 
     if (Q_in.size() == 0) begin
-      $display("[TB Error] Q Input is empty , no packets in Q_in");
+      $display("[TB Error] Q - Input is empty , no packets in Q_in");
       $finish;
     end
     if (Q_out.size() == 0) begin
-      $display("[TB Error] Q Output is empty , no packets in Q_out");
+      $display("[TB Error] Q - Output is empty , no packets in Q_out");
       $finish;
     end
 
