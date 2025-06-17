@@ -1,32 +1,24 @@
-module testbench;
+program testbench (
+    clk,
+    reset,
+    dut_inp,
+    inp_valid,
+    dut_outp,
+    outp_valid,
+    busy,
+    error
+);
 
   //Section 1: Define variables for DUT port connections
-  reg clk, reset;
-  //TODO
+  input clk;
+  input [7:0] dut_outp;
+  input outp_valid;
+  input busy;
+  input [3:0] error;
+  output reg reset;
+  output reg [7:0] dut_inp;
+  output reg inp_valid;
 
-  reg [7:0] dut_inp;
-  reg inp_valid;
-  wire [7:0] dut_outp;
-  wire outp_valid;
-  wire busy;
-  wire [3:0] error;
-  //Section 2: Router DUT instantiation
-  //TODO router_dut dut_inst(.clk(clk),.reset(reset),..........);
-
-  router_dut dut_inst (
-      .clk(clk),
-      .reset(reset),
-      .dut_inp(dut_inp),
-      .inp_valid(inp_valid),
-      .dut_outp(dut_outp),
-      .outp_valid(outp_valid),
-      .busy(busy),
-      .error(error)
-  );
-  //Section 3: Clock initiliazation and Generation
-  //TODO
-  initial clk = 0;
-  always #5 clk = ~clk;
 
   //Section 4: TB Variables declarations. 
   //Variables required for various testbench related activities . ex: stimulus generation,packing ....
@@ -153,6 +145,8 @@ module testbench;
     count = 10;
     apply_reset();
     repeat (count) begin
+      inp_stream.delete();
+      wait (busy == 0);
       generate_stimulus(stimulus_pkt);
       //print(stimulus_pkt);
       pack(inp_stream, stimulus_pkt);
@@ -198,24 +192,4 @@ module testbench;
       outp_stream.delete();
     end  //end of forever
   end  //end of initial begin
-
-
-  //--------End of Section 8---------------- 
-
-
-  always @(error) begin
-    case (error)
-      1: $display("[TB Error] Protocol Violation. Packet driven while Router is busy");
-      2: $display("[TB Error] Packet Dropped due to CRC mismatch");
-      3: $display("[TB Error] Packet Dropped due to Minimum packet size mismatch");
-      4: $display("[TB Error] Packet Dropped due to Maximum packet size mismatch");
-      5: begin
-        $display("[TB Error] Packet Corrupted.Packet dropped due to packet Length mismatch");
-        $display("[TB Error] Step 1: Check value of Length filed of packet driven from TB");
-        $display(
-            "[TB Error] Step 2: Check total number of bytes received in DUT in the waveform (Check dut_inp)");
-        $display("[TB Error] Check value of Step 1 matching with Step 2 or not");
-      end
-    endcase
-  end
-endmodule
+endprogram

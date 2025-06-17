@@ -97,7 +97,7 @@ module router_dut (
         end//end_of_crc_if
 		else begin
           crc_dropped_count++;
-          if ($test$plusargs("dut_debug"))
+          if ($test$plusargs("dut_debug_crc"))
             $display(
                 "[DUT CRC] Packet %0d Dropped in DUT due to CRC Mismatch time=%0t",
                 total_inp_pkt_count,
@@ -111,7 +111,8 @@ module router_dut (
         end
       end  //end_of_if_inp_valid_0_Check
       inp_pkt.push_back(dut_inp);
-      if ($test$plusargs("dut_debug")) $display("[DUT Input] dut_inp=%0d time=%0t", dut_inp, $time);
+      if ($test$plusargs("dut_debug_input"))
+        $display("[DUT Input] dut_inp=%0d time=%0t", dut_inp, $time);
     end  //end_of_while
     sop <= 0;
     len_recv <= 0;
@@ -123,13 +124,13 @@ module router_dut (
       @(posedge clk);
       outp_valid <= 1;
       dut_outp   <= inp_pkt.pop_front();
-      if ($test$plusargs("dut_debug"))
+      if ($test$plusargs("dut_debug_output"))
         $strobe("[DUT Output] dut_outp=%0d time=%0t", dut_outp, $time);
       if (inp_pkt.size() == 0) begin
         total_outp_pkt_count++;
         if ($test$plusargs("dut_debug"))
           $display(
-              "[DUT Output] Total Packet %0d Driving completed at time=%0t ",
+              "[DUT Output] Total Packet %0d Driving completed at time=%0t \n",
               total_outp_pkt_count,
               $time
           );
@@ -165,7 +166,7 @@ module router_dut (
     end
     new_crc = payload.sum();
     payload.delete();
-    if ($test$plusargs("dut_debug"))
+    if ($test$plusargs("dut_debug_crc"))
       $display("[DUT CRC] Received crc=%0d caluclated crc=%0d time=%0t", crc, new_crc, $time);
     return (crc == new_crc);
   endfunction
@@ -186,6 +187,4 @@ module router_dut (
     end else return 0;
   endfunction
 endmodule
-
-
 
