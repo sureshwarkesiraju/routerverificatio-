@@ -1,0 +1,15 @@
+# Ignore ModelSim/QuestaSim files
+work/
+vsim.wlf
+transcript
+*.log
+
+# Ignore Neovim-related directories and swap files
+.nvim/
+.cache/
+*.swp
+*.swo
+
+# Ignore backup files
+*~
+
