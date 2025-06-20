@@ -1,61 +1,116 @@
 m255
 K4
 z2
-!s11f vlog 2020.1 2020.02, Feb 28 2020
+Z0 !s99 nomlopt
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+R0
+!s11f vlog 2021.1 2021.01, Jan 19 2021
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 dC:/Users/kesir/Desktop/SVprojects
+Z1 dC:/Users/kesir/Desktop/SVprojects
+T_opt
+!s110 1750404202
+VHF7bWWGE0YRM;Ma2mG0Bb1
+04 9 4 work testbench fast 0
+=1-d03957f221a3-68550c6a-197-35d0
+Z2 !s124 OEM100
+Z3 o-quiet -auto_acc_if_foreign -work work
+Z4 tCvgOpt 0
+n@_opt
+Z5 OL;O;2021.1;73
+R1
+T_opt1
+!s110 1750407616
+VRS4MAGENo]98Edn?1D^:@1
+04 3 4 work top fast 0
+=1-d03957f221a3-685519bf-38b-3d50
+R2
+R3
+R4
+n@_opt1
+R5
 vrouter_dut
-Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
-Z2 !s110 1749816170
+Z6 DXx6 sv_std 3 std 0 22 9oUSJO;AeEaW`l:M@^WG92
+Z7 !s110 1750407615
 !i10b 1
-!s100 BEXPh2Y:FXJ]VoM^j[e@A2
-Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
-ICl0E[244XF[jEN<Y;dWGJ1
-Z4 VDg1SIo80bB@j0V0VzS_@n1
+!s100 F8e;OP^=>7Bnc9h_KhzTg1
+IUoGWSMf_A47oNlzccHe1@0
 S1
-R0
-w1749746502
+R1
+w1750148719
 8router_dut.sv
 Frouter_dut.sv
 !i122 0
-L0 1 188
-Z5 OV;L;2020.1;71
+L0 1 189
+Z8 VDg1SIo80bB@j0V0VzS_@n1
+Z9 OL;L;2021.1;73
 r1
 !s85 0
 31
-Z6 !s108 1749816170.000000
+Z10 !s108 1750407615.000000
 !s107 router_dut.sv|
-!s90 -sv|router_dut.sv|
-!i113 1
-o-sv
-Z7 tCvgOpt 0
-vtestbench
-R1
-R2
-!i10b 1
-!s100 Ta]lf41P2]bmT>DM:MIn20
-R3
-I4:1DPn0`4W2_[DGVW^B802
+!s90 router_dut.sv|
+!i113 0
+Z11 o-L mtiAvm -L mtiRnm -L mtiOvm -L mtiUvm -L mtiUPF -L infact
 R4
+4testbench
+R6
+R7
+!i10b 1
+!s100 G3<LZ420RcQFbeMn4D4:A1
+IZf;W4U6^m8APdCiFRAgS10
 S1
-R0
-w1749816163
+R1
+w1750407468
 8testbench.sv
 Ftestbench.sv
 !i122 1
-L0 1 221
-R5
+L0 1 0
+R8
+R9
 r1
 !s85 0
 31
-R6
+R10
 !s107 testbench.sv|
-!s90 -sv|testbench.sv|
-!i113 1
-o-sv
+!s90 testbench.sv|
+!i113 0
+R11
+R4
+vtop
+R6
 R7
+!i10b 1
+!s100 OZ^<HdQKLBfG9;IOT8:zP0
+IIGgL5_BH`P8A3aXTOa7Ei1
+S1
+R1
+w1750147957
+8top.sv
+Ftop.sv
+!i122 2
+L0 1 46
+R8
+R9
+r1
+!s85 0
+31
+R10
+!s107 top.sv|
+!s90 top.sv|
+!i113 0
+R11
+R4

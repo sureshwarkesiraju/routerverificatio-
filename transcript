@@ -1,55 +1,83 @@
 # ** Warning: (vlib-34) Library already exists at "work".
-# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 17:32:50 on Jun 13,2025
-# vlog -sv router_dut.sv 
+# Errors: 0, Warnings: 1
+# ** Warning: (vdel-134) Unable to remove locked optimized design "_opt".  Locker is kesir@KIMI.
+# ** Warning: (vlib-34) Library already exists at "work".
+# Errors: 0, Warnings: 1
+# QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+# Start time: 13:50:15 on Jun 20,2025
+# vlog router_dut.sv 
 # -- Compiling module router_dut
 # 
 # Top level modules:
 # 	router_dut
-# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# End time: 13:50:15 on Jun 20,2025, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 17:32:50 on Jun 13,2025
-# vlog -sv testbench.sv 
-# -- Compiling module testbench
+# QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+# Start time: 13:50:15 on Jun 20,2025
+# vlog testbench.sv 
+# -- Compiling program testbench
 # 
 # Top level modules:
 # 	testbench
-# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# End time: 13:50:15 on Jun 20,2025, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
-# vsim -voptargs="+acc" testbench 
-# Start time: 17:32:50 on Jun 13,2025
+# QuestaSim-64 vlog 2021.1 Compiler 2021.01 Jan 19 2021
+# Start time: 13:50:15 on Jun 20,2025
+# vlog top.sv 
+# -- Compiling module top
+# 
+# Top level modules:
+# 	top
+# End time: 13:50:15 on Jun 20,2025, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim work.top 
+# Start time: 13:50:15 on Jun 20,2025
+# ** Note: (vsim-3812) Design is being optimized...
+# //  Questa Sim-64
+# //  Version 2021.1 win64 Jan 19 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  QuestaSim and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
 # Loading sv_std.std
-# Loading work.testbench
-# Loading work.router_dut
+# Loading work.top(fast)
+# Loading work.testbench(fast)
 # [TB reset] Applied reset to DUT
 # [TB Reset] Reset completed
-# [TB Generate] packet (size=28) at time =15
+# [TB Generate] packet (size=22) at time =15
 # [TB Drive] Driving of packet started at time=25
-# [TB Generate] packet (size=30) at time =355
-# [TB Drive] Driving of packet started at time=615
-# [TB Generate] packet (size=27) at time =965
-# [TB Drive] Driving of packet started at time=1245
-# [TB Generate] packet (size=24) at time =1565
-# [TB Drive] Driving of packet started at time=1815
-# [TB Generate] packet (size=24) at time =2105
-# [TB Drive] Driving of packet started at time=2325
-# [TB Generate] packet (size=28) at time =2615
-# [TB Drive] Driving of packet started at time=2835
-# [TB Generate] packet (size=27) at time =3165
-# [TB Drive] Driving of packet started at time=3425
-# [TB Generate] packet (size=24) at time =3745
-# [TB Drive] Driving of packet started at time=3995
-# [TB Generate] packet (size=20) at time =4285
-# [TB Drive] Driving of packet started at time=4505
-# [TB Generate] packet (size=23) at time =4755
-# [TB Drive] Driving of packet started at time=4935
+# [TB Generate] packet (size=24) at time =485
+# [TB Drive] Driving of packet started at time=495
+# [TB Generate] packet (size=29) at time =995
+# [TB Drive] Driving of packet started at time=1005
+# [TB Generate] packet (size=24) at time =1605
+# [TB Drive] Driving of packet started at time=1615
+# [TB Generate] packet (size=22) at time =2115
+# [TB Drive] Driving of packet started at time=2125
+# [TB Generate] packet (size=22) at time =2585
+# [TB Drive] Driving of packet started at time=2595
+# [TB Generate] packet (size=30) at time =3055
+# [TB Drive] Driving of packet started at time=3065
+# [TB Generate] packet (size=20) at time =3685
+# [TB Drive] Driving of packet started at time=3695
+# [TB Generate] packet (size=28) at time =4115
+# [TB Drive] Driving of packet started at time=4125
+# [TB Generate] packet (size=22) at time =4705
+# [TB Drive] Driving of packet started at time=4715
 # **********************************************************
 # ********************** TEST PASSESD **********************
 # ************** [INFO] All pakckets matched ***************
 # ************** [INFO] matched =10 mismatched =0 **********
 # **********************************************************
-# ** Note: $finish    : testbench.sv(173)
-#    Time: 5515 ps  Iteration: 1  Instance: /testbench
-# End time: 17:32:50 on Jun 13,2025, Elapsed time: 0:00:00
+# ** Note: $finish    : testbench.sv(167)
+#    Time: 5275 ns  Iteration: 1  Instance: /top/tb_inst
+# End time: 13:50:23 on Jun 20,2025, Elapsed time: 0:00:08
 # Errors: 0, Warnings: 0
