@@ -3,14 +3,14 @@ vdel -all
 vlib work
 
 # Compile RTL and Testbench
-vlog -sv router_dut.sv
-vlog -sv testbench.sv
-vlog -sv top.sv
+vlog  router_dut.sv
+vlog  testbench.sv
+vlog  top.sv
 # Simulate the top-level testbench module
-vsim -voptargs=+acc top
+vsim work.top
 
-# Optionally add all signals to wave window
-add wave -r *
+
+#add wave -r *
 
 # Run simulation
 run -all

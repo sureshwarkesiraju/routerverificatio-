@@ -66,7 +66,7 @@ program testbench (
     wait (busy == 0);  //wait utill router is ready to accept packets
     @(posedge clk);
     $display("[TB Drive] Driving of packet started at time=%0t", $time);
-    //$display("[TB reviced packet (in_stream) ]", inp_stream);
+    // $display("[TB reviced packet (in_stream) ]", inp_stream);
     inp_valid <= 1;
     foreach (inp_stream[i]) begin
       dut_inp <= inp_stream[i];
@@ -183,8 +183,8 @@ program testbench (
       @(posedge outp_valid);
       repeat (inp_stream.size()) begin
         if (outp_valid == 0) break;
-        @(posedge clk);
         outp_stream.push_back(dut_outp);
+        @(posedge clk);
       end  // end of while
       //$display("[TB reviced packet OUT]", outp_stream);
       unpack(outp_stream, dut_pkt);
