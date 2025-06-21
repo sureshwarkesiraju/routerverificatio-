@@ -1,16 +1,10 @@
 program testbench (
-    clk,
-    reset,
-    dut_inp,
-    inp_valid,
-    dut_outp,
-    outp_valid,
-    busy,
-    error
+    input clk,
+    router_if vif
 );
 
   //Section 1: Define variables for DUT port connections
-  input clk;
+  /*  input clk;
   input [7:0] dut_outp;
   input outp_valid;
   input busy;
@@ -18,7 +12,7 @@ program testbench (
   output reg reset;
   output reg [7:0] dut_inp;
   output reg inp_valid;
-
+*/
 
   //Section 4: TB Variables declarations. 
   //Variables required for various testbench related activities . ex: stimulus generation,packing ....
@@ -40,9 +34,9 @@ program testbench (
   task apply_reset();
     //TODO
     $display("[TB reset] Applied reset to DUT");
-    reset <= 1;
-    repeat (2) @(posedge clk);
-    reset <= 0;
+    vif.reset <= 1;
+    repeat (2) @(vif.cb);
+    vif.reset <= 0;
     $display("[TB Reset] Reset completed");
   endtask
 
@@ -63,16 +57,16 @@ program testbench (
 
   // Drive function
   task automatic drive(const ref bit [7:0] inp_stream[$]);
-    wait (busy == 0);  //wait utill router is ready to accept packets
-    @(posedge clk);
+    wait (vif.cb.busy == 0);  //wait utill router is ready to accept packets
+    @(vif.cb);
     $display("[TB Drive] Driving of packet started at time=%0t", $time);
     // $display("[TB reviced packet (in_stream) ]", inp_stream);
-    inp_valid <= 1;
+    vif.cb.inp_valid <= 1;
     foreach (inp_stream[i]) begin
-      dut_inp <= inp_stream[i];
-      @(posedge clk);
+      vif.cb.dut_inp <= inp_stream[i];
+      @(vif.cb);
     end
-    inp_valid <= 0;
+    vif.cb.inp_valid <= 0;
   endtask
 
 
@@ -146,18 +140,18 @@ program testbench (
     apply_reset();
     repeat (count) begin
       inp_stream.delete();
-      wait (busy == 0);
+      wait (vif.cb.busy == 0);
       generate_stimulus(stimulus_pkt);
       //print(stimulus_pkt);
       pack(inp_stream, stimulus_pkt);
       Q_in.push_back(stimulus_pkt);
       drive(inp_stream);
-      repeat (5) @(posedge clk);
+      repeat (5) @(vif.cb);
     end
     //Wait for dut to process the packet and to drive on output
 
-    wait (busy == 0);
-    repeat (10) @(posedge clk);
+    wait (vif.cb.busy == 0);
+    repeat (10) @(vif.cb);
 
     if (Q_out.size() == 0) begin
       $display("[TB error]  There are no packets to compare");
@@ -180,11 +174,11 @@ program testbench (
   //TODO 
   initial begin
     forever begin
-      @(posedge outp_valid);
+      @(posedge vif.cb.outp_valid);
       repeat (inp_stream.size()) begin
-        if (outp_valid == 0) break;
-        outp_stream.push_back(dut_outp);
-        @(posedge clk);
+        if (vif.cb.outp_valid == 0) break;
+        outp_stream.push_back(vif.cb.dut_outp);
+        @(vif.cb);
       end  // end of while
       //$display("[TB reviced packet OUT]", outp_stream);
       unpack(outp_stream, dut_pkt);
