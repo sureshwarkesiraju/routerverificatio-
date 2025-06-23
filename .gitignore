@@ -2,6 +2,7 @@
 work/
 vsim.wlf
 transcript
+vsim_stacktrace.vstf
 *.log
 
 # Ignore Neovim-related directories and swap files

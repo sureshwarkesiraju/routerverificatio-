@@ -28,13 +28,15 @@ program testbench (
       inp_stream.delete();
       wait (vif.cb.busy == 0);
       //Section 6.1: Construct the object for stimulus_pkt handle
-
+      pkt_id++;
+      stimulus_pkt = new;
       //Section 6.2: Call generate_stimulus() method from stimulus_pkt object
-
+      generate_stimulus(stimulus_pkt, pkt_id);
 
       //Section 6.3: Call pack(inp_stream) method from stimulus_pkt object
-
-
+      stimulus_pkt.pack(stimulus_pkt.inp_stream);
+      q_inp.push_back(stimulus_pkt);
+      drive(stimulus_pkt, pkt_id);
     end
     //Wait for dut to process the packet and to drive on output
     wait (vif.cb.busy == 0);  //drain time
@@ -55,11 +57,43 @@ program testbench (
 
   //Section 5.1 : Define generate_stimulus() method
 
+  function automatic void generate_stimulus(ref packet gen_pkt, input int pkt_id);
+    gen_pkt.sa = $urandom_range(1, 8);
+    gen_pkt.da = $urandom_range(1, 8);
+    gen_pkt.payload = new[$urandom_range(10, 20)];
+    foreach (gen_pkt.payload[i]) gen_pkt.payload[i] = $urandom_range(2, 1900);
+    gen_pkt.len = gen_pkt.payload.size() + 4 + 4 + 1 + 1;
+    gen_pkt.Crc = gen_pkt.payload.sum();
+    $display("[TB Generate] packet %0d (size=%0d) at time =%0t", pkt_id, gen_pkt.len, $time);
+  endfunction
 
   //Section 5.2 : Define drive() method
+  task automatic drive(ref packet pkt, input int pkt_id);
+    wait (vif.cb.busy == 0);  //wait utill router is ready to accept packets
+    @(vif.cb);
+    $display("[TB Drive] Driving of packet %0d started at time=%0t", pkt_id, $time);
+    // $display("[TB reviced packet (in_stream) ]", inp_stream);
+    vif.cb.inp_valid <= 1;
+    foreach (pkt.inp_stream[i]) begin
+      vif.cb.dut_inp <= pkt.inp_stream[i];
+      @(vif.cb);
+    end
+    $display("[TB Drive] Driving of packet %0d started at time=%0t", pkt_id, $time);
+    vif.cb.inp_valid <= 0;
+    vif.cb.dut_inp   <= 'z;
+    repeat (5) @(vif.cb);
+  endtask
 
   //Section 5.3 : Define compare method()
 
+  function bit compare(input packet ref_pkt, input packet dut_pkt);
+    bit status;
+    status = 1;
+    foreach (ref_pkt.inp_stream[i]) begin
+      status = status && (ref_pkt.inp_stream[i] == dut_pkt.outp_stream[i]);
+    end
+    return status;
+  endfunction
 
 
   function void result();
@@ -91,13 +125,14 @@ program testbench (
       @(posedge vif.cb.outp_valid);
       while (1) begin
         outp_stream.push_back(vif.cb.dut_outp);
-        //$display("[TB outp] dut_outp=%0d time=%0t",vif.cb.dut_outp,$time);
+        // $display("[TB outp] dut_outp=%0d time=%0t", vif.cb.dut_outp, $time);
         if (vif.cb.outp_valid == 0) begin
           cnt++;
           //Section 8.1: Construct object for handle dut_pkt
-
+          dut_pkt = new;
           //Section 8.2: Call unpack(outp_stream) method from dut_pkt object
-
+          dut_pkt.unpack(outp_stream);
+          dut_pkt.outp_stream = outp_stream;
           q_outp.push_back(dut_pkt);
           //print(dut_pkt);
           $display("[TB Output Monitor] Packet %0d collected size=%0d time=%0t", cnt,
@@ -109,6 +144,4 @@ program testbench (
       end  //end_of_while
     end  //end_of_forever
   end  //end_of_initial
-
 endprogram
-
