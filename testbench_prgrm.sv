@@ -6,38 +6,50 @@ program testbench (
   //Section4: TB Variables declarations. 
   //Variables required for various testbench related activities . 
   //ex: stimulus generation,packing ....
+
+  //Section 4.1 : Include packet.sv 
   `include "packet.sv"
 
-  bit [7:0] inp_stream[$];
-  bit [7:0] outp_stream[$];
-
+  //Section 4.2 : Define packet class handles
   packet stimulus_pkt;
   packet dut_pkt;
 
-  packet q_inp[$];
-  packet q_outp[$];
+  //Section 4.3 : Define local outp_stream to capture packet from dut
+  bit [7:0] outp_stream[$];
 
+  //Section 4.4: Store input stimulus packets into q_inp : Reference packet
+  packet q_inp[$];  //queue of objects
+
+  //Section 4.5 : Store dut output packet into q_outp : Actual packet
+  packet q_outp[$];  //queue of objects
+
+  //Section 4.6 : Stimulus packet count and packet id
   bit [15:0] pkt_count, pkt_id;
-
 
   //Section 6: Verification Flow
   initial begin
+    //Section 6.1 : How many number of packets to generate
+
     pkt_count = 10;
+    //Section 6.2 : Call apply_reset() method.
     apply_reset();
     repeat (pkt_count) begin
-      inp_stream.delete();
       wait (vif.cb.busy == 0);
-      //Section 6.1: Construct the object for stimulus_pkt handle
       pkt_id++;
-      stimulus_pkt = new;
-      //Section 6.2: Call generate_stimulus() method from stimulus_pkt object
-      generate_stimulus(stimulus_pkt, pkt_id);
+      //Section 6.3 : Construct stimulus packet Object
+      stimulus_pkt = new();
 
-      //Section 6.3: Call pack(inp_stream) method from stimulus_pkt object
-      stimulus_pkt.pack(stimulus_pkt.inp_stream);
+      //Section 6.4 : Generate random stimulus.
+      void'(stimulus_pkt.randomize());
+      //$display(stimulus_pkt.inp_stream);
+      //Section 6.5 : Store Reference/Golden packet into q_inp.
       q_inp.push_back(stimulus_pkt);
+
+      //Section 6.6 : Call drive() method.
       drive(stimulus_pkt, pkt_id);
+      repeat (5) @(vif.cb);
     end
+
     //Wait for dut to process the packet and to drive on output
     wait (vif.cb.busy == 0);  //drain time
     repeat (10) @(vif.cb);  //drain time
@@ -52,59 +64,45 @@ program testbench (
     vif.reset <= 1;
     repeat (2) @(vif.cb);
     vif.reset <= 0;
-    $display("[TB Reset] Reset Completed at time=%0t", $time);
+    $display("[TB Reset] Reset Completed at time=%0t \n", $time);
   endtask
 
-  //Section 5.1 : Define generate_stimulus() method
+  //Section 5.1 : Define drive() method
 
-  function automatic void generate_stimulus(ref packet gen_pkt, input int pkt_id);
-    gen_pkt.sa = $urandom_range(1, 8);
-    gen_pkt.da = $urandom_range(1, 8);
-    gen_pkt.payload = new[$urandom_range(10, 20)];
-    foreach (gen_pkt.payload[i]) gen_pkt.payload[i] = $urandom_range(2, 1900);
-    gen_pkt.len = gen_pkt.payload.size() + 4 + 4 + 1 + 1;
-    gen_pkt.Crc = gen_pkt.payload.sum();
-    $display("[TB Generate] packet %0d (size=%0d) at time =%0t", pkt_id, gen_pkt.len, $time);
-  endfunction
-
-  //Section 5.2 : Define drive() method
-  task automatic drive(ref packet pkt, input int pkt_id);
-    wait (vif.cb.busy == 0);  //wait utill router is ready to accept packets
+  task automatic drive(ref packet pkt, input int ptk_id);
+    wait (vif.cb.busy == 0);
     @(vif.cb);
-    $display("[TB Drive] Driving of packet %0d started at time=%0t", pkt_id, $time);
-    // $display("[TB reviced packet (in_stream) ]", inp_stream);
+    $display("[TB Drive] Driving of packet %0d (size=%0d) started at time=%0t", pkt_id, pkt.len,
+             $time);
     vif.cb.inp_valid <= 1;
     foreach (pkt.inp_stream[i]) begin
       vif.cb.dut_inp <= pkt.inp_stream[i];
       @(vif.cb);
     end
-    $display("[TB Drive] Driving of packet %0d started at time=%0t", pkt_id, $time);
+    $display("[TB Drive] Driving of packet %0d (size=%0d) ended at time=%0t", pkt_id, pkt.len,
+             $time);
+    //    @(vif.cb);
     vif.cb.inp_valid <= 0;
     vif.cb.dut_inp   <= 'z;
     repeat (5) @(vif.cb);
   endtask
 
-  //Section 5.3 : Define compare method()
-
-  function bit compare(input packet ref_pkt, input packet dut_pkt);
-    bit status;
-    status = 1;
-    foreach (ref_pkt.inp_stream[i]) begin
-      status = status && (ref_pkt.inp_stream[i] == dut_pkt.outp_stream[i]);
-    end
-    return status;
-  endfunction
-
-
+  //Section 5.2 : Define result() method
   function void result();
     bit [31:0] matched, mis_matched;
+
     foreach (q_inp[i]) begin
-      if (compare(q_inp[i], q_outp[i])) matched++;
+      //Fill the code here from LAB document
+      if (q_inp[i].compare(q_outp[i])) matched++;
       else begin
         mis_matched++;
-        $display("[TB Error] Packet %0d MisMatched ", i);
+        $display("[TB ERROR] packet %0d MisMatched", i);
+        q_inp[i].print();
+        q_outp[i].print();
+        $display("***************************************\n");
       end
-    end  //end_of_forever
+    end  //end_of_foreach
+
     if (mis_matched == 0 && matched == pkt_count) begin
       $display("\n[INFO] *************************************");
       $display("[INFO] ************Test PASSED *************");
@@ -124,24 +122,40 @@ program testbench (
     forever begin
       @(posedge vif.cb.outp_valid);
       while (1) begin
+        //Section 8.1 : Capture complete packet from DUT
         outp_stream.push_back(vif.cb.dut_outp);
-        // $display("[TB outp] dut_outp=%0d time=%0t", vif.cb.dut_outp, $time);
+        //$display(outp_stream);
+        //Section 8.2 : Collect untill outp_valid becomes 0.
         if (vif.cb.outp_valid == 0) begin
+
+          //Section 8.3 : Increment the cnt to track how many output packets collected
           cnt++;
-          //Section 8.1: Construct object for handle dut_pkt
+
+          //Section 8.4 : Construct dut_pkt object to store the collected output
           dut_pkt = new;
-          //Section 8.2: Call unpack(outp_stream) method from dut_pkt object
+
+          //Section 8.5 : Unpack collected outp_stream into dut_pkt fields
           dut_pkt.unpack(outp_stream);
+
+          //Section 8.6 : Copy local outp_stream to outp_stream in dut_pkt
           dut_pkt.outp_stream = outp_stream;
+          //dut_pkt.print();
+          //Section 8.7 : Store the actual packet from DUT for sel-checking
           q_outp.push_back(dut_pkt);
-          //print(dut_pkt);
-          $display("[TB Output Monitor] Packet %0d collected size=%0d time=%0t", cnt,
+
+          $display("[TB Output Monitor] Packet %0d collected size=%0d time=%0t \n", cnt,
                    outp_stream.size(), $time);
+          //Section 8.8 : Delete local outp_stream queue
           outp_stream.delete();
+
+          //Section 8.9 : Break out of while loop as collection of packet completed.
           break;
         end
+        //Section 8.10 : Wait for posedge of clk to collect all the dut output
         @(vif.cb);
+
       end  //end_of_while
     end  //end_of_forever
   end  //end_of_initial
+
 endprogram
