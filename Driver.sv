@@ -2,18 +2,17 @@ class driver;
   //Section D.1:Define virtual interface, mailbox and packet class handles
   packet pkt;
   virtual router_if.tb_mod_port vif;
-
   mailbox #(packet) mbx;
 
   //Section D.2: Define variable no_of_pkts_recvd to keep track of packets received from generator
-  bit [31:0] no_of_pkts_recvd;
+  bit [15:0] no_of_pkts_recvd;
 
   //Section D.3: Define custom constructor with mailbox and virtual interface handles as arguments
   function new(input mailbox#(packet) mbx_arg, input virtual router_if.tb_mod_port vif_arg);
     mbx = mbx_arg;
     vif = vif_arg;
   endfunction
-  //Define extern methods.
+
   extern task run();
   extern task drive(packet pkt);
   extern task drive_reset(packet pkt);
@@ -26,12 +25,10 @@ task driver::run();
 
   while (1) begin  //driver runs forever 
     //Section D.7.1: Wait for packet from generator and pullout once packet available in mailbox
-
     mbx.get(pkt);
     no_of_pkts_recvd++;
     $display("[Driver] Received  %0s packet %0d from generator at time=%0t", pkt.kind.name(),
              no_of_pkts_recvd, $time);
-
     //Section D.7.2: Process the Received transaction
     drive(pkt);
     $display("[Driver] Done with %0s packet %0d from generator at time=%0t", pkt.kind.name(),
@@ -43,20 +40,21 @@ endtask
 task driver::drive(packet pkt);
   //Section D.6.1: Check the transaction type and call the appropriate method
   case (pkt.kind)
-    RESET: drive_reset(pkt);
+    RESET:    drive_reset(pkt);
     STIMULUS: drive_stimulus(pkt);
-    default: $display("[Driver] Invalid or Unknown packet recived");
+    default:  $display("[Driver] Unknown packet received");
   endcase
 endtask
 
 //Section D.4: Define drive_reset method with packet as argument
 task driver::drive_reset(packet pkt);
-  $display("[Driver] Drivng Reset trasnsaction into DUT started at time %0t", $time);
+  $display("[Driver] Driving Reset transaction into DUT at time=%0t", $time);
   vif.reset <= 1'b1;
   repeat (pkt.reset_cycles) @(vif.cb);
   vif.reset <= 1'b0;
-  $display("[Driver] Drivng Reset trasnsaction into DUT ended at time %0t", $time);
+  $display("[Driver] Driving Reset transaction completed at time=%0t", $time);
 endtask
+
 //Section D.5: Define drive_stimulus method with packet as argument
 task driver::drive_stimulus(packet pkt);
   wait (vif.cb.busy == 0);
@@ -68,10 +66,10 @@ task driver::drive_stimulus(packet pkt);
     vif.cb.dut_inp <= pkt.inp_stream[i];
     @(vif.cb);
   end
-  $display("[Driver] Driving of packet %0d (size=%0d) ended at time=%0t", no_of_pkts_recvd,
+  $display("[Driver] Driving of packet %0d (size=%0d) ended at time=%0t \n", no_of_pkts_recvd,
            pkt.len, $time);
-  @(vif.cb);
   vif.cb.inp_valid <= 0;
   vif.cb.dut_inp   <= 'z;
   repeat (5) @(vif.cb);
 endtask
+
