@@ -1,0 +1,25 @@
+$date
+	Thu Jul 17 00:28:10 2025
+$end
+$version
+	QuestaSim Version 2021.1
+$end
+$timescale
+	1ns
+$end
+
+$scope module top $end
+
+$scope module dut_inst $end
+
+$scope function calc_crc $end
+$upscope $end
+
+$scope function is_packet_not_ok $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+$end

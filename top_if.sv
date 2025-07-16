@@ -21,16 +21,15 @@ interface router_if (
     input error;
   endclocking
 
-  //Section 11 :Define clocking block for monitors
+  //Section 11 :Define clocking block for minotrs
   clocking mcb @(posedge clk);
-    input dut_inp;  //Direction are w.r.t TB
+    input dut_inp;
     input inp_valid;
     input dut_outp;
     input outp_valid;
     input busy;
     input error;
   endclocking
-
 
   //Section 9:Define modport for TB Driver
   //modport tb_mod_port (output reset,dut_inp,inp_valid, input outp_valid,dut_outp,busy,error);
@@ -66,18 +65,15 @@ module top;
   );
 
   //Section4:  Program Block (TB) instantiation
-  testbench tb_inst (
-      .clk(clk),
-      .vif(router_if_inst)
-  );
+  testbench tb_inst (.vif(router_if_inst));
 
 
   //Section 6: Dumping Waveform
-  /* initial begin
-  $dumpfile("dump.vcd");
-  $dumpvars(0,top.dut_inst); 
-end
-*/
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0, top.dut_inst);
+  end
+
 endmodule
 
 
