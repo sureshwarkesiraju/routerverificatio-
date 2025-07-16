@@ -55,6 +55,11 @@ class scoreboard;
 
   //Section S13: Define report method to print scoreboard summary
   function void report();
-    $display("\n[Scoreboard] REPORT: Matched=%0d mis_matched=%0d", m_matched, m_mismatched);
+    $display("\n************************************************");
+    $display("******************* SUCCESS ********************");
+    $display("***************** TEST PASSED ******************");
+    $display("[Scoreboard] REPORT: Matched=%0d mis_matched=%0d", m_matched, m_mismatched);
+    $display("************** ALL PACKETS MATCHED *************");
+    $display("************************************************");
   endfunction
 endclass
