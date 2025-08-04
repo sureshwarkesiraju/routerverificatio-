@@ -10,7 +10,7 @@ vlog  top_if.sv
 vsim work.top
 
 
-#add wave -r *
+add wave -r *
 
 # Run simulation
 run -all
